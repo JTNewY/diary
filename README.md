@@ -3,7 +3,9 @@
 
 ## 1. Django 설치 및 프로젝트 생성
 ### 파이썬 패키지 설치
+
 Django를 설치하려면 다음 명령어를 실행합니다.
+
 ```bash
 pip install django
 
