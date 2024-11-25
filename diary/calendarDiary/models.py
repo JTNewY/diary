@@ -13,7 +13,6 @@ class Holiday(models.Model):
             ("KR", "South Korea"),
             ("US", "United States"),
             ("JP", "Japan"),
-            # 필요에 따라 국가 추가
         ],
     )
     
