@@ -10883,7 +10883,7 @@ video.bg-video {
   left: 0;
   height: 100%;
   width: 100%;
-  background-color: rgba(0, 0, 0, 0.85);
+  background: linear-gradient(rgba(255, 0, 0, 0.5), rgba(0, 0, 255, 0.5));
 }
 .masthead .masthead-content {
   position: relative;
