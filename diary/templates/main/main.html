@@ -17,7 +17,9 @@
                 <ul class="navbar-nav me-auto my-2 my-lg-0 navbar-nav-scroll" style="--bs-scroll-height: 100px;">
                     <li class="nav-item dropdown">
                         <a class="nav-link dropdown-toggle" href="#" id="navbarScrollingDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                            niner2님 환영합니다.
+                           
+                            <span>{{ user.username }}님 환영합니다!</span>  <!-- 커스텀 유저 모델에서 'username' 사용 -->
+                    
                         </a>
                         <ul class="dropdown-menu" aria-labelledby="navbarScrollingDropdown">
                             <li><a class="dropdown-item" href="#">마이페이지</a></li>

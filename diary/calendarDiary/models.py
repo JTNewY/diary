@@ -4,7 +4,7 @@ from django.utils import timezone
 
 class ToDo(models.Model):
     user = models.ForeignKey(
-        settings.AUTH_USER_MODEL, 
+        settings.AUTH_USER_MODEL,  # settings.AUTH_USER_MODEL을 사용하여 CustomUser 모델을 참조
         on_delete=models.CASCADE, 
         related_name="user_todos"  # 가독성을 위해 명확한 이름 사용
     )
@@ -22,15 +22,21 @@ class ToDo(models.Model):
 class Note(models.Model):
     content = models.TextField()  # 메모 내용
     date = models.DateField(default=timezone.now)  # 현재 날짜를 기본값으로 설정
+    user = models.ForeignKey(
+        settings.AUTH_USER_MODEL,  # settings.AUTH_USER_MODEL을 사용하여 CustomUser 모델을 참조
+        on_delete=models.CASCADE, 
+        null=True,  # null=True로 설정하여 기존 데이터를 처리할 수 있도록 함
+        blank=True  # blank=True로 설정하여 Admin에서 빈 값도 허용
+    )
 
     def __str__(self):
-        return self.content
+        return f"Note: {self.content[:20]}"  # 간단히 메모의 처음 20자만 출력
 
 
 class Event(models.Model):
-    title = models.CharField(max_length=100)  # 이벤트 제목
-    start_date = models.DateField()  # 시작 날짜
-    description = models.TextField()  # 설명
+    title = models.CharField(max_length=100)
+    start_date = models.DateField()
+    end_date = models.DateField(default=timezone.now)  # 기본값으로 현재 날짜 설정
 
     def __str__(self):
         return self.title
@@ -43,11 +49,7 @@ class Holiday(models.Model):
     H_country = models.CharField(
         verbose_name="국가코드",
         max_length=2,
-        choices=[
-            ("KR", "South Korea"),
-            ("US", "United States"),
-            ("JP", "Japan"),
-        ],
+        choices=[("KR", "South Korea"), ("US", "United States"), ("JP", "Japan")],
     )
 
     class Meta:
@@ -61,21 +63,17 @@ class Holiday(models.Model):
 
 class CalendarDiary(models.Model):
     user = models.ForeignKey(
-        settings.AUTH_USER_MODEL, 
+        settings.AUTH_USER_MODEL,  # settings.AUTH_USER_MODEL을 사용하여 CustomUser 모델을 참조
         on_delete=models.CASCADE, 
-        related_name="user_diaries"  # 가독성을 위해 명확한 이름 사용
+        related_name="user_diaries"
     )
     title = models.CharField(max_length=255)  # 일정 제목
     start_date = models.DateTimeField()  # 일정 시작일
-    end_date = models.DateTimeField()  # 일정 종료일
-    color = models.CharField(max_length=7, default="#FFFFFF")  # 일정 색깔 (디폴트: 흰색)
+    end_date = models.DateTimeField(null=True, blank=True)  # 일정 종료일, null=True와 blank=True로 설정하여 값이 없을 수 있도록 함
+    color = models.CharField(max_length=7, default="#FFFFFF")  # 일정 색깔
     status = models.CharField(
         max_length=50, 
-        choices=[
-            ('planned', 'Planned'),
-            ('completed', 'Completed'),
-            ('canceled', 'Canceled'),
-        ], 
+        choices=[('planned', 'Planned'), ('completed', 'Completed'), ('canceled', 'Canceled')], 
         default='planned'  # 기본값: Planned
     )
     content = models.TextField(blank=True)  # 일정 내용
