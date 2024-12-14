@@ -1,0 +1,101 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block loginhead %}
+<!-- 사용자 지정 css 1호 -->
+<!-- <link href="style.css" rel="stylesheet"> -->
+<link href="{% static 'login/style.css' %}" rel="stylesheet">
+{% endblock %}
+
+{% block loginheader %}
+<header>
+    <nav class="navbar navbar-expand-lg navbar-dark">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="#">Diary Calendar Project</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarScroll" aria-controls="navbarScroll" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarScroll">
+            <ul class="navbar-nav me-auto my-2 my-lg-0 navbar-nav-scroll" style="--bs-scroll-height: 100px;">
+                <!-- <li class="nav-item">
+                <a class="nav-link active" aria-current="page" href="#">Main</a>
+                </li> -->
+                <!-- <li class="nav-item">
+                <a class="nav-link" href="#">Link</a>
+                </li> -->
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" id="navbarScrollingDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                        niner2님 환영합니다.
+                    </a>
+                    <ul class="dropdown-menu" aria-labelledby="navbarScrollingDropdown">
+                        <li><a class="dropdown-item" href="#">마이페이지</a></li>
+                        <li><hr class="dropdown-divider"></li>
+                        <li><a class="dropdown-item" href="#">회원정보 수정</a></li>
+                        <li><a class="dropdown-item" href="#">비밀번호 변경</a></li>
+                    </ul>
+                </li>
+                <!-- <li class="nav-item">
+                <a class="nav-link disabled">Link</a>
+                </li> -->
+            </ul>
+                <form class="d-flex">
+                    <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
+                    <button class="btn btn-outline-primary" type="submit">Search</button>
+                </form>
+            </div>
+        </div>
+    </nav>
+</header>
+{% endblock %}
+
+{% block content%}
+    <!-- 헤더 -->
+	
+
+    <!-- 메인 콘텐츠 -->
+    <main>
+        <!-- 사이트 설명 -->
+        <div class="site-description">
+            <h2>Diary</h2>
+            <p>Welcome to our diary project</p>
+        </div>
+		<!-- 로그인 전 -->
+        <div class="login-form">
+			<form>
+				<div class="form-floating">
+					<input type="id" class="form-control" id="floatingInput" placeholder="name@example.com">
+					<label for="floatingInput">ID</label>
+				</div>
+				<div class="form-floating mb-3">
+					<input type="password" class="form-control" id="floatingPassword" placeholder="Password">
+					<label for="floatingPassword">PASSWORD</label>
+				</div>
+				<button id="login-btn" class="btn btn-primary w-100 py-2 mb-3" type="button">Login</button>
+			</form>
+			<ul id="menu">
+				<li> <a href="{% url 'accounts:signup' %}">Sign up</a></li>
+				<li> |</li>
+				<li> <a href="{% url 'accounts:find_id' %}">Find ID</a></li>
+				<li> |</li>
+				<li> <a href="{% url 'accounts:find_pw' %}">Find PW</a></li>
+			</ul>
+		</div>
+        <!-- 로그인 후 -->
+		<div class="hidden-content">
+			<div class="text-center">
+				<svg class="bd-placeholder-img rounded-circle mb-3" width="140" height="140" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Placeholder" preserveAspectRatio="xMidYMid slice" focusable="false">
+					<title>Placeholder</title>
+					<rect width="100%" height="100%" fill="var(--bs-secondary-color)"></rect>
+				</svg>
+				<h2 class="fw-normal mb-3">Nick Name</h2>
+				<p><a class="btn btn-primary" href="#">일정보기</a></p>
+			</div>
+		</div>
+    </main>
+
+	<script src="static/scripts.js"></script>
+    {% block loginJs %}
+    <script src="{% static 'login/scripts.js' %}"></script>
+    {% endblock %}
+{% endblock %}
+
