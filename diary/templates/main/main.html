@@ -39,20 +39,27 @@
 
 {% block content %}
 <div class="container">
-    <div class="schedule"> 
+    <div class="schedule">
         <div class="content">
-            <!-- 날짜를 동적으로 표시 (클릭된 날짜 표시) -->
+            <!-- 선택된 날짜를 동적으로 표시 -->
             <h1 class="date" id="selectedDate">
                 {{ selected_date|date:"l" }}<span>{{ selected_date|date:"F j, Y" }}</span>
             </h1>
-            <div class="notes">
+
+            <!-- To-Do List 섹션 -->
+            <div class="todos">
+                <h3>To-Do List</h3>
                 <p>
-                    <input type="text" value="" placeholder="new note" style="flex: 1;"/>
-                    <a href="#" title="Remove input" class="removeInput animate">+</a>
+                    <input type="text" placeholder="Add a new task" id="newTodoInput" style="flex: 1;"/>
+                    <button id="addTodoBtn" class="btn btn-success">Add To-Do</button>
                 </p>
-                <ul class="noteList">
-                    {% for note in notes %}
-                        <li>{{ note.content }} <a href="#" title="Remove note" class="removeNote animate">x</a></li>
+                <ul class="todoList">
+                    {% for todo in todos %}
+                        <li id="todo-{{ todo.id }}">
+                            <input type="checkbox" {% if todo.is_completed %}checked{% endif %} data-todo-id="{{ todo.id }}">
+                            {{ todo.task }}
+                            <a href="#" class="removeTodo btn btn-danger btn-sm" data-todo-id="{{ todo.id }}">x</a>
+                        </li>
                     {% endfor %}
                 </ul>
             </div>
@@ -119,9 +126,6 @@
 {% endblock %}
 
 {% block mainjs %}
-<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js"></script>
-  <!-- 한글 로케일 파일 추가 -->
-<script src="https://cdn.jsdelivr.net/npm/fullcalendar@5.11.2/main.min.js"></script> <!-- FullCalendar JS 로드 -->
 <script>
     $(document).ready(function () {
         // FullCalendar 초기화
@@ -135,25 +139,98 @@
             defaultDate: moment().format('YYYY-MM-DD'),  // 기본 날짜는 오늘로 설정
             editable: true,
             eventLimit: true,  // 일정이 많을 경우 'more' 링크 표시
-            events: [
-                {% for event in events %}
-                {
-                    title: '{{ event.title }}',  // 이벤트 제목
-                    start: '{{ event.start_date|date:"Y-m-d H:i:s" }}',
-                    end: '{% if event.end_date %}{{ event.end_date|date:"Y-m-d H:i:s" }}{% endif %}',
-                },
-                {% endfor %}
-            ],
-            // 날짜 클릭 시 이벤트
+            events: function (start, end, timezone, callback) {
+                $.ajax({
+                    url: '/calendar/',  // AJAX로 이벤트와 To-Do를 가져옵니다
+                    data: { selected_date: start.format('YYYY-MM-DD') },
+                    dataType: 'json',
+                    success: function (response) {
+                        const events = response.events.map(event => ({
+                            title: event.title,
+                            start: event.start_date,
+                            color: '#FFD700'  // 이벤트 색상 설정
+                        }));
+                        callback(events);
+                    }
+                });
+            },
             dayClick: function (date) {
-                // 'YYYY년 MM월 DD일' 포맷으로 날짜 표시
-                const formattedDate = date.format('YYYY년 MM월 DD일');
-      
-                // 선택된 날짜를 화면의 h1#selectedDate 요소에 업데이트
-                $('#selectedDate').html(formattedDate);
+                const formattedDate = date.format('YYYY-MM-DD');
+                const displayDate = date.format('dddd, MMMM D, YYYY');
+    
+                // 선택된 날짜 업데이트
+                $('#selectedDate').html(`${date.format('dddd')} <span>${displayDate}</span>`);
+    
+                // 선택한 날짜의 To-Do 리스트 불러오기
+                $.ajax({
+                    url: '/calendar/',  // 선택한 날짜의 To-Do 가져오기
+                    type: 'GET',
+                    data: { selected_date: formattedDate },  // 선택한 날짜 전송
+                    success: function (response) {
+                        // 기존 To-Do 리스트 초기화
+                        $('.todoList').empty();
+
+                        // 새 To-Do 리스트 추가
+                        response.todos.forEach(todo => {
+                            $('.todoList').append(`
+                                <li id="todo-${todo.id}">
+                                    <input type="checkbox" ${todo.completed ? 'checked' : ''} data-todo-id="${todo.id}">
+                                    ${todo.task}
+                                    <a href="#" class="removeTodo btn btn-danger btn-sm" data-todo-id="${todo.id}">x</a>
+                                </li>
+                            `);
+                        });
+                    }
+                });
             }
         });
-      });
-      
+    
+        // To-Do 추가
+        $('#addTodoBtn').on('click', function () {
+            const newTask = $('#newTodoInput').val();
+            const selectedDate = $('#selectedDate').text();
+    
+            if (newTask.trim() !== '') {
+                $.ajax({
+                    url: '/add_todo/',  // To-Do 추가 처리 URL
+                    type: 'POST',
+                    data: {
+                        task: newTask,
+                        date: selectedDate,
+                        csrfmiddlewaretoken: '{{ csrf_token }}'  // Django CSRF Token
+                    },
+                    success: function (response) {
+                        // 새로고침 없이 To-Do 리스트 갱신
+                        $('.todoList').append(`
+                            <li id="todo-${response.id}">
+                                <input type="checkbox" data-todo-id="${response.id}">
+                                ${response.task}
+                                <a href="#" class="removeTodo btn btn-danger btn-sm" data-todo-id="${response.id}">x</a>
+                            </li>
+                        `);
+                        $('#newTodoInput').val('');  // 입력 필드 초기화
+                    }
+                });
+            }
+        });
+    
+        // To-Do 삭제
+        $(document).on('click', '.removeTodo', function () {
+            const todoItem = $(this).closest('li');
+            const todoId = $(this).data('todo-id');
+    
+            $.ajax({
+                url: '/delete_todo/',  // To-Do 삭제 처리 URL
+                type: 'POST',
+                data: {
+                    todo_id: todoId,
+                    csrfmiddlewaretoken: '{{ csrf_token }}'
+                },
+                success: function (response) {
+                    todoItem.remove();
+                }
+            });
+        });
+    });
 </script>
 {% endblock %}
