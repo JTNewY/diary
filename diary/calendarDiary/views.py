@@ -4,37 +4,65 @@ from datetime import datetime
 from .models import Holiday, Note, Event, ToDo
 from accounts.models import CustomUser  # CustomUser 모델을 가져옴
 
+
+# 작업 추가 뷰
+@login_required
+def add_task(request):
+    if request.method == 'POST':
+        task_name = request.POST.get('task_name')
+        task_description = request.POST.get('description')
+        start_date = request.POST.get('start_date')
+        start_time = request.POST.get('start_time')
+        end_date = request.POST.get('end_date')
+        end_time = request.POST.get('end_time')
+
+        # 시작일과 시작 시간을 datetime 객체로 변환
+        start_datetime = datetime.combine(datetime.strptime(start_date, "%Y-%m-%d").date(), 
+                                          datetime.strptime(start_time, "%H:%M").time())
+        
+        # 마감일과 마감 시간을 datetime 객체로 변환
+        end_datetime = datetime.combine(datetime.strptime(end_date, "%Y-%m-%d").date(), 
+                                        datetime.strptime(end_time, "%H:%M").time())
+
+        # Event 모델에 새 이벤트 추가
+        Event.objects.create(
+            user=request.user,
+            title=task_name,
+            description=task_description,
+            start_date=start_datetime,
+            end_date=end_datetime
+        )
+
+        # 일정 추가 후 캘린더 페이지로 리다이렉트
+        return redirect('calendar_view', username=request.user.username, selected_date=start_date)
+    
+    return render(request, 'add_todo.html')
 # 캘린더 뷰 (사용자별 캘린더 페이지)
 @login_required
 def calendar_view(request, username=None, selected_date=None):
-    # username이 URL에서 전달되면 해당 사용자 가져오기, 없으면 로그인한 사용자
     if username:
         try:
-            user = CustomUser.objects.get(username=username)  # CustomUser 모델 사용
+            user = CustomUser.objects.get(username=username)
         except CustomUser.DoesNotExist:
-            user = request.user  # 사용자가 없으면 로그인한 사용자로 대체
+            user = request.user
     else:
-        user = request.user  # 로그인한 사용자
+        user = request.user
 
-    # selected_date 처리: URL에서 날짜가 전달되면 해당 날짜로, 없으면 오늘 날짜
     if selected_date:
         try:
-            selected_date = datetime.strptime(selected_date, "%Y-%m-%d").date()  # 날짜 형식으로 변환
+            selected_date = datetime.strptime(selected_date, "%Y-%m-%d").date()
         except ValueError:
-            selected_date = datetime.today().date()  # 날짜 형식이 맞지 않으면 오늘 날짜로 설정
+            selected_date = datetime.today().date()
     else:
-        selected_date = datetime.today().date()  # selected_date가 없으면 오늘 날짜
+        selected_date = datetime.today().date()
 
     # 해당 날짜의 To-Do와 이벤트 가져오기
     todos = ToDo.objects.filter(user=user, due_date=selected_date)
     
-    # 이벤트 필터링: start_date가 selected_date와 일치하는 이벤트를 가져옴
+    # 이벤트 필터링: start_date와 end_date에 맞는 이벤트를 가져옴
     events = Event.objects.filter(start_date__year=selected_date.year,
                                   start_date__month=selected_date.month,
                                   start_date__day=selected_date.day)
-
-    # 기존 노트 데이터
-    notes = Note.objects.filter(user=user)
 
     # 템플릿에 데이터 전달
     context = {
@@ -42,41 +70,12 @@ def calendar_view(request, username=None, selected_date=None):
         'selected_date': selected_date,
         'todos': todos,
         'events': events,
-        'notes': notes
     }
 
-    # calendar.html로 렌더링
     return render(request, 'main/main.html', context)
 
 # To-Do 추가 뷰
-@login_required
-def add_todo(request):
-    if request.method == 'POST':
-        task = request.POST.get('task')
-        due_date = request.POST.get('due_date')
 
-        # 새로운 To-Do 항목 추가
-        ToDo.objects.create(user=request.user, task=task, due_date=due_date)
-        
-        # 일정 후 캘린더 페이지로 리다이렉트
-        return redirect('calendar_view', username=request.user.username, selected_date=due_date)
-    
-    return render(request, 'add_todo.html')
-
-# To-Do 삭제 뷰
-@login_required
-def delete_todo(request):
-    if request.method == 'POST':
-        task_id = request.POST.get('task_id')
-        try:
-            # To-Do 항목 삭제
-            todo = ToDo.objects.get(id=task_id, user=request.user)
-            todo.delete()
-            return redirect('calendar_view', username=request.user.username, selected_date=todo.due_date)
-        except ToDo.DoesNotExist:
-            return redirect('calendar_view', username=request.user.username, selected_date=datetime.today().date())
-
-    return redirect('calendar_view', username=request.user.username, selected_date=datetime.today().date())
 
 # 메인 페이지 뷰
 def main_page(request):
