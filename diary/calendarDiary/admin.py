@@ -8,6 +8,7 @@ class CustomUserAdmin(admin.ModelAdmin):
     list_display = ('username', 'email', 'first_name', 'last_name')  # CustomUser에서 표시할 필드들
     search_fields = ('username', 'email')  # 검색할 수 있는 필드들
 
+
 @admin.register(Holiday)
 class HolidayAdmin(admin.ModelAdmin):
     list_display = ('H_name', 'H_date', 'H_country', 'H_memo')  # 리스트에서 보여줄 필드들
