@@ -72,7 +72,7 @@ TEMPLATES = [
     },
 ]
 
-WSGI_APPLICATION = 'diary.wsgi.application'
+WSGI_APPLICATION = 'config.wsgi.application'
 
 
 # Database
@@ -120,10 +120,12 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/5.1/howto/static-files/
 
 # 스태틱 연동
-STATIC_URL = 'static/' 
-STATICFILES_DIR = {
-    BASE_DIR /"static",
-}
+STATIC_URL = '/calendarDiary/static/'
+STATICFILES_DIR = [
+    BASE_DIR /"calendarDiary"/"static",
+    
+]
+STATIC_ROOT = BASE_DIR / "staticfiles"
 
 AUTH_USER_MODEL = 'accounts.CustomUser'
 

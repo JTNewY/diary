@@ -1,7 +1,35 @@
 from django.db import models
 from django.conf import settings
 
+class ToDo(models.Model):
+    user = models.ForeignKey(
+        settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name="todos"
+    )
+    task = models.CharField(max_length=255)  # To-Do 내용
+    due_date = models.DateField()  # 마감일
+    is_completed = models.BooleanField(default=False)  # 완료 여부
 
+    class Meta:
+        ordering = ['-due_date']
+
+    def __str__(self):
+        return f"{self.task} ({'완료' if self.is_completed else '미완료'})"
+
+class Note(models.Model):
+    content = models.TextField()
+    date = models.DateField()  # 날짜를 추가하여 메모를 특정 날짜와 연결
+
+    def __str__(self):
+        return self.content
+
+class Event(models.Model):
+    title = models.CharField(max_length=100)
+    start_date = models.DateField()
+    description = models.TextField()
+
+    def __str__(self):
+        return self.title
+    
 class Holiday(models.Model):
     H_name = models.CharField(verbose_name="공휴일 이름", max_length=100)
     H_date = models.DateField(verbose_name="공휴일 날짜")
