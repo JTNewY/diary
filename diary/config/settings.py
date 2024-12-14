@@ -58,15 +58,15 @@ TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
         'DIRS': [
-            BASE_DIR / 'templates',  # 이걸 추가해야 템플릿을 사용할 수 있다!
+            BASE_DIR / 'templates',  # 템플릿 파일을 저장하는 기본 디렉토리
         ],
-        'APP_DIRS': True,
+        'APP_DIRS': True,  # 앱의 템플릿 디렉토리를 자동 검색
         'OPTIONS': {
             'context_processors': [
-                'django.template.context_processors.debug',
-                'django.template.context_processors.request',
-                'django.contrib.auth.context_processors.auth',
-                'django.contrib.messages.context_processors.messages',
+                'django.template.context_processors.debug',  # 디버그 정보 전달
+                'django.template.context_processors.request',  # HTTP 요청 객체 전달
+                'django.contrib.auth.context_processors.auth',  # user 객체와 auth 관련 정보 전달
+                'django.contrib.messages.context_processors.messages',  # Django 메시지 프레임워크 지원
             ],
         },
     },

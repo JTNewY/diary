@@ -1,6 +1,31 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
+from django.contrib.auth import authenticate, login
+from django.contrib import messages
+from .forms import CustomLoginForm
 
-# Create your views here.
+
+
+# 로그인 뷰
+def custom_login_view(request):
+    if request.method == 'POST':
+        form = CustomLoginForm(data=request.POST)
+        if form.is_valid():
+            username = form.cleaned_data.get('username')
+            password = form.cleaned_data.get('password')
+            user = authenticate(request, username=username, password=password)
+            if user is not None:
+                login(request, user)
+                messages.success(request, f"{username}님, 환영합니다!")
+                # 로그인 후 캘린더 페이지로 리다이렉트, username을 URL로 전달
+                return redirect('calendar_view', username=username)  # calendar_view로 리다이렉트
+            else:
+                messages.error(request, "로그인 정보가 올바르지 않습니다.")
+        else:
+            messages.error(request, "양식을 올바르게 작성해주세요.")
+    else:
+        form = CustomLoginForm()
+
+    return render(request, 'accounts/login.html', {'form': form})
 
 # 로그인 페이지 뷰
 def accounts_login(request):
