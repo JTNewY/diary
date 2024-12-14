@@ -59,7 +59,7 @@
             <h2>사이트 소개</h2>
             <p>저희의 일정 관리 사이트에 오신 것을 환영합니다.</p>
         </div>
-		<!-- 로그인 전 -->
+		<!-- login -->
         <div class="login-form">
             <form method="post">
                 {% csrf_token %}
@@ -81,15 +81,44 @@
             </div>
             {% endif %}
 			<ul id="menu">
-				<li> <a href="{% url 'accounts:signup' %}">Sign up</a></li>
+				<li> <a id="Sign-up">Sign up</a></li>
 				<li> |</li>
-				<li> <a href="{% url 'accounts:find_id' %}">Find ID</a></li>
+				<li> <a id="Find-ID">Find ID</a></li>
 				<li> |</li>
-				<li> <a href="{% url 'accounts:find_pw' %}">Find PW</a></li>
+				<li> <a id="Find-PW">Find PW</a></li>
 			</ul>
 		</div>
-        <!-- 로그인 후 -->
-		<div class="hidden-content">
+        <!-- signup -->
+        <div class="signup-form hidden-content">
+            <form>
+                <div class="form-floating">
+                    <input type="text" class="form-control" id="username" placeholder="Username">
+                    <label for="floatingInput">Username</label>
+                </div>
+                <div class="form-floating">
+                    <input type="email" class="form-control" id="email" placeholder="Email">
+                    <label for="floatingInput">Email</label>
+                </div>
+                <div class="form-floating">
+                    <input type="password" class="form-control" id="password" placeholder="Password">
+                    <label for="floatingInput">Password</label>
+                </div>
+                <div class="form-floating mb-3">
+                    <input type="date" class="form-control" id="birth_date" placeholder="Birth Date">
+                    <label for="floatingInput">Birth Date</label>
+                </div>
+                <button id="Signup-btn" class="btn btn-primary w-100 py-2 mb-3" type="button">Sing up</button>
+            </form>
+            <ul id="menu">
+                <li><a href="/accounts/login/">Login</a></li>
+                <li>|</li>
+                <li><a href="/accounts/find_id/">Find ID</a></li>
+                <li>|</li>
+                <li><a href="/accounts/find_pw/">Find PW</a></li>
+            </ul>
+        </div>
+        <!-- mypage -->
+		<div class="mypage hidden-content">
 			<div class="text-center">
 				<svg class="bd-placeholder-img rounded-circle mb-3" width="140" height="140" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Placeholder" preserveAspectRatio="xMidYMid slice" focusable="false">
 					<title>Placeholder</title>
@@ -100,8 +129,7 @@
 			</div>
 		</div>
     </main>
-
-	<script src="static/scripts.js"></script>
+    
     {% block loginJs %}
     <script src="{% static 'login/scripts.js' %}"></script>
     {% endblock %}
