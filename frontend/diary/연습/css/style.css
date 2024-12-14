@@ -1,0 +1,254 @@
+.container {
+ display: flex;
+ flex-direction: row;
+ /* 가로배치 */
+ gap: 20px;
+ margin: 20px;
+}
+
+.todolist{
+    white-space: nowrap;
+    border: 1px solid #ddd;
+    padding: 10px;
+    border-radius: 5px;
+
+}
+
+.holiday{
+    border: 1px solid #ddd;
+    padding: 10px;
+    border-radius: 5px;
+    
+}
+
+.holiday h1 {
+    text-align: center;
+}
+
+.footer {
+    text-align: center; /* 가운데 정렬 */
+    padding: 10px 0; /* 위아래 여백 추가 */
+    background-color: #f8f9fa; /* 배경 색상 */
+    color: #333; /* 텍스트 색상 */
+    font-size: 0.9rem; /* 글자 크기 */
+    border-top: 1px solid #ddd; /* 상단에 구분선 */
+}
+
+.footer p {
+    margin: 0; /* 여백 제거 */
+}
+.search {
+    white-space: nowrap;
+    display: flex; /* 가로 정렬 */
+    align-items: center; /* 세로 중앙 정렬 */
+    gap: 10px; /* 입력창과 버튼 사이의 간격 */
+}
+
+.search input {
+    white-space: nowrap;
+    flex: 1; /* 입력창이 가능한 한 넓게 설정 */
+    padding: 5px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+}
+
+.search button {
+    white-space: nowrap;
+    padding: 5px 10px;
+    border: none;
+    border-radius: 4px;
+    background-color: #007bff;
+    color: #ffffff;
+    cursor: pointer;
+}
+
+.search button:hover {
+    background-color: #0056b3;
+}
+
+
+.calendarlist {
+    position: relative;
+    width: 70%;
+    padding: 20px;
+    background-color: #f9f9f9;
+    border-radius: 6px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+
+  /* required */
+  .calendar {
+    position: relative;
+    border-radius: 4px;
+    margin: 0 auto;
+    background-color: #ffffff;
+    color: #333333;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+/* 반응형 설정 */
+@media screen and (max-width: 768px) {
+    .container {
+        flex-direction: column; /* 화면이 좁아지면 세로 배치 */
+    }
+
+    .todolist, .calendarlist, .holiday {
+        flex: none; /* 기본 크기로 설정 */
+        width: 100%; /* 화면 너비에 맞춤 */
+    }
+}
+  
+  .calendar h1, .calendar h2{
+    font-weight: 300;
+    font-size: 26px;
+    line-height: 28px;
+    text-transform: uppercase;
+    margin: 0px 0px 20px 0px;
+  }
+  
+  .calendar h1 span{
+    display: block;
+  }
+  
+  .calendar .col{
+    position: relative;
+    float: left;
+    height: 100%;
+  }
+  
+  .calendar .col .content{
+    padding: 40px;
+  }
+  
+  .calendar ul{
+    margin: 0px;
+  }
+  
+  .calendar ul li{
+    list-style: none;
+  }
+  
+  .calendar .leftCol{
+    width: 40%;
+    background-color: #F48989;
+  }
+  
+  .calendar .noteList li{
+    color: #ffffff;
+    margin-bottom: 10px;
+  }
+  
+  .calendar .notes p,
+  .calendar .notes input,
+  .calendar .noteList li{
+    font-weight: 300;
+    font-size: 14px;
+  }
+  
+  .calendar .notes p{
+    border-bottom: solid 1px rgba(255,255,255,0.4);
+  }
+  
+  .calendar .notes input{
+    background-color: #F48989;
+    color: #ffffff;
+    border: none;
+    width: 200px;
+  }
+  
+  .calendar .addNote,
+  .calendar .removeNote{
+    float: right;
+    color: rgba(255,255,255,0.4);
+    font-weight: bold;
+    margin-left: 20px;
+  }
+  
+  .calendar .addNote:hover,
+  .calendar .removeNote:hover{
+    color: #ffffff;
+  }
+  
+  .calendar .addNote{
+    font-size: 16px;
+  }
+  
+  .calendar .leftCol h1{
+    color: #ffffff;
+    margin-bottom: 40px;
+  }
+  
+  .calendar .rightCol{
+    width: 60%;
+  }
+  
+  .calendar .rightCol h2{
+    color: #C7BEBE;
+    text-align: right;
+    margin-bottom: 70px;
+  }
+  
+  .calendar .months li,
+  .calendar .weekday li,
+  .calendar .days li{
+    float: left;
+    text-transform: uppercase;
+  }
+  
+  .calendar .months li a,
+  .calendar .weekday li a,
+  .calendar .days li a{
+    display: block;
+    color: #747978;
+  }
+  
+  .calendar .months li a{
+    font-size: 10px;
+    color: #C7BEBE;
+    text-align: center;
+    width: 32px;
+    margin-bottom: 20px;
+  }
+  
+  .calendar .months li .selected{
+    font-weight: bold;
+    color: #747978;
+  }
+  
+  .calendar .weekday li a{
+    width: 55px;
+    text-align: center;
+    margin-bottom: 20px;
+    font-size: 12px;
+  }
+  
+  .calendar .days li{
+    width: 55px;
+  }
+  
+  .calendar .days li a{
+    width: 36px;
+    height: 24px;
+    text-align: center;
+    margin: auto auto;
+    font-size: 12px;
+    font-weight: bold;
+    border-radius: 12px;
+    margin-bottom: 10px;
+    padding-top: 10px;
+  }
+  
+  
+  .calendar .days li a:hover{
+    background-color: #EEEDE9;
+  }
+  
+  .calendar .days li .selected{
+    background-color: #F5A1A3!important;
+    color: #ffffff;
+  }
+  
+  .calendar .days li .event{
+    color: #F5A1A3;
+  }
