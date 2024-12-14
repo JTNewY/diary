@@ -1,10 +1,8 @@
 {% extends 'base.html' %}
-{% load static %}
+
 
 {% block loginhead %}
-<!-- 사용자 지정 css 1호 -->
-<!-- <link href="style.css" rel="stylesheet"> -->
-<link href="{% static 'login/style.css' %}" rel="stylesheet">
+<link href="style.css" rel="stylesheet">
 {% endblock %}
 
 {% block loginheader %}
@@ -59,7 +57,7 @@
             <h2>사이트 소개</h2>
             <p>저희의 일정 관리 사이트에 오신 것을 환영합니다.</p>
         </div>
-		<!-- 로그인 전 -->
+		<!-- 로그인 폼 -->
         <div class="login-form">
 			<form>
 				<div class="form-floating">
@@ -73,14 +71,13 @@
 				<button id="login-btn" class="btn btn-primary w-100 py-2 mb-3" type="button">Login</button>
 			</form>
 			<ul id="menu">
-				<li> <a href="{% url 'accounts:signup' %}">Sign up</a></li>
+				<li>Sign up</li>
 				<li> |</li>
-				<li> <a href="{% url 'accounts:find_id' %}">Find ID</a></li>
+				<li>Find ID</li>
 				<li> |</li>
-				<li> <a href="{% url 'accounts:find_pw' %}">Find PW</a></li>
+				<li>Find PW</li>
 			</ul>
 		</div>
-        <!-- 로그인 후 -->
 		<div class="hidden-content">
 			<div class="text-center">
 				<svg class="bd-placeholder-img rounded-circle mb-3" width="140" height="140" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Placeholder" preserveAspectRatio="xMidYMid slice" focusable="false">
@@ -94,8 +91,5 @@
     </main>
 
 	<script src="static/scripts.js"></script>
-    {% block loginJs %}
-    <script src="{% static 'login/scripts.js' %}"></script>
-    {% endblock %}
 {% endblock %}
 
