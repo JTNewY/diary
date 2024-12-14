@@ -1,0 +1,159 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block mainhead %}
+<link rel="stylesheet" href="{% static 'main/css/style.css' %}">
+{% endblock %}
+
+{% block mainheader %}
+<header>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="#">Diary Calendar Project</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarScroll" aria-controls="navbarScroll" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarScroll">
+                <ul class="navbar-nav me-auto my-2 my-lg-0 navbar-nav-scroll" style="--bs-scroll-height: 100px;">
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="navbarScrollingDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            niner2님 환영합니다.
+                        </a>
+                        <ul class="dropdown-menu" aria-labelledby="navbarScrollingDropdown">
+                            <li><a class="dropdown-item" href="#">마이페이지</a></li>
+                            <li><hr class="dropdown-divider"></li>
+                            <li><a class="dropdown-item" href="#">회원정보 수정</a></li>
+                            <li><a class="dropdown-item" href="#">비밀번호 변경</a></li>
+                        </ul>
+                    </li>
+                </ul>
+                <form class="d-flex">
+                    <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
+                    <button class="btn btn-outline-success" type="submit">Search</button>
+                </form>
+            </div>
+        </div>
+    </nav>
+</header>
+{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="schedule"> 
+        <div class="content">
+            <!-- 날짜를 동적으로 표시 (클릭된 날짜 표시) -->
+            <h1 class="date" id="selectedDate">
+                {{ selected_date|date:"l" }}<span>{{ selected_date|date:"F j, Y" }}</span>
+            </h1>
+            <div class="notes">
+                <p>
+                    <input type="text" value="" placeholder="new note" style="flex: 1;"/>
+                    <a href="#" title="Remove input" class="removeInput animate">+</a>
+                </p>
+                <ul class="noteList">
+                    {% for note in notes %}
+                        <li>{{ note.content }} <a href="#" title="Remove note" class="removeNote animate">x</a></li>
+                    {% endfor %}
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <!-- 캘린더 표시 영역 -->
+    <div class="ui calendar">
+        <!-- 몇 가지 알림을 미리 표시 -->
+        <div class="alert alert-primary" role="alert">
+            <h4>D-5 생일</h4>
+        </div>
+        <div class="alert alert-primary" role="alert">
+            <h4>D-8 자격증 시험</h4>
+        </div>
+        <div class="alert alert-primary" role="alert">
+            <h4>D-13 크리스마스 파티</h4>
+        </div>
+        <div class="ui grid">
+            <div class="ui sixteen column">
+                <div class="button-container">
+                    <button>+</button>
+                </div>
+                <div id="calendar"></div> <!-- 이곳에 FullCalendar가 렌더링됩니다 -->
+            </div>
+        </div>
+    </div>
+
+    <!-- 검색 및 공휴일 섹션 -->
+    <div class="search">
+        <p>
+            <input type="text"/>
+            <button>검색</button>
+        </p>
+        <div class="anniversary">
+            <div class="year-month text-center">
+                <button><</button>
+                <h2>{{ selected_date|date:"Y년 m월" }}</h2>
+                <button>></button>
+            </div>
+            <table class="table table-striped table-hover">
+                <thead>
+                    <tr class="text-center">
+                        <th class="col-1">#</th>
+                        <th class="col-7">구분</th>
+                        <th class="col-3">일</th>
+                        <th class="col-5">요일</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for event in events %}
+                        <tr>
+                            <td>{{ event.start_date.day }}</td>
+                            <td>{{ event.title }}</td>
+                            <td>{{ event.start_date|date:"d" }}일</td>
+                            <td>{{ event.start_date|date:"l" }}</td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block mainjs %}
+<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js"></script>
+  <!-- 한글 로케일 파일 추가 -->
+<script src="https://cdn.jsdelivr.net/npm/fullcalendar@5.11.2/main.min.js"></script> <!-- FullCalendar JS 로드 -->
+<script>
+    $(document).ready(function () {
+        // FullCalendar 초기화
+        $('#calendar').fullCalendar({
+            locale: 'ko',  // 한국어 로케일 설정
+            header: {
+                left: 'prev,next today',
+                center: 'title',
+                right: 'month,basicWeek,basicDay'
+            },
+            defaultDate: moment().format('YYYY-MM-DD'),  // 기본 날짜는 오늘로 설정
+            editable: true,
+            eventLimit: true,  // 일정이 많을 경우 'more' 링크 표시
+            events: [
+                {% for event in events %}
+                {
+                    title: '{{ event.title }}',  // 이벤트 제목
+                    start: '{{ event.start_date|date:"Y-m-d H:i:s" }}',
+                    end: '{% if event.end_date %}{{ event.end_date|date:"Y-m-d H:i:s" }}{% endif %}',
+                },
+                {% endfor %}
+            ],
+            // 날짜 클릭 시 이벤트
+            dayClick: function (date) {
+                // 'YYYY년 MM월 DD일' 포맷으로 날짜 표시
+                const formattedDate = date.format('YYYY년 MM월 DD일');
+      
+                // 선택된 날짜를 화면의 h1#selectedDate 요소에 업데이트
+                $('#selectedDate').html(formattedDate);
+            }
+        });
+      });
+      
+</script>
+{% endblock %}
