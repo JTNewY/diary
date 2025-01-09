@@ -63,21 +63,22 @@ class Holiday(models.Model):
 
 class CalendarDiary(models.Model):
     user = models.ForeignKey(
-        settings.AUTH_USER_MODEL,  # settings.AUTH_USER_MODEL을 사용하여 CustomUser 모델을 참조
-        on_delete=models.CASCADE, 
+        settings.AUTH_USER_MODEL,  # 사용자와 연결
+        on_delete=models.CASCADE,
         related_name="user_diaries"
     )
     title = models.CharField(max_length=255)  # 일정 제목
-    start_date = models.DateTimeField()  # 일정 시작일
-    end_date = models.DateTimeField(null=True, blank=True)  # 일정 종료일, null=True와 blank=True로 설정하여 값이 없을 수 있도록 함
-    color = models.CharField(max_length=7, default="#FFFFFF")  # 일정 색깔
+    start_date = models.DateTimeField()  # 시작 일시
+    end_date = models.DateTimeField()  # 종료 일시
+    content = models.TextField(blank=True)  # 내용
+    color = models.CharField(max_length=7, default="#FFFFFF")  # 색상
     status = models.CharField(
-        max_length=50, 
-        choices=[('planned', 'Planned'), ('completed', 'Completed'), ('canceled', 'Canceled')], 
-        default='planned'  # 기본값: Planned
+        max_length=50,
+        choices=[('planned', 'Planned'), ('completed', 'Completed'), ('canceled', 'Canceled')],
+        default='planned'
     )
-    content = models.TextField(blank=True)  # 일정 내용
     notification_time = models.DateTimeField(null=True, blank=True)  # 알림 시간
+    add_task = models.CharField(max_length=255, blank=True, null=True)  # add_task 필드를 추가
 
     class Meta:
         ordering = ['-start_date']  # 최신 일정이 위에 표시되도록 정렬

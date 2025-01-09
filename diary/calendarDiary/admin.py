@@ -16,20 +16,18 @@ class HolidayAdmin(admin.ModelAdmin):
 
 @admin.register(CalendarDiary)
 class CalendarDiaryAdmin(admin.ModelAdmin):
-    list_display = ('title', 'start_date', 'end_date', 'status', 'user', 'add_task')  # 리스트에서 보여줄 필드들
-    search_fields = ('title', 'user__username')  # 검색할 수 있는 필드들
-    list_filter = ('status', 'user')  # 필터링할 수 있는 필드들
-
-    def add_task(self, obj):
-        # CalendarDiary에서 add_task 필드를 반환하도록 수정
-        return obj.add_task  # 실제 add_task 필드가 있다면 그것을 반환
-
-    add_task.admin_order_field = 'add_task'  # admin에서 정렬 가능하게 하려면 필드명 지정
-    add_task.short_description = 'Add Task'  # admin에서 보일 필드 이름을 설정
+    list_display = ('title', 'start_date', 'end_date', 'status', 'user', 'add_task')  # add_task 필드 추가
+    search_fields = ('title', 'user__username')
+    list_filter = ('status', 'user')
 
     def user(self, obj):
-        # CalendarDiary의 user 필드에서 CustomUser 모델의 필드를 가져옵니다.
-        return obj.user.username  # obj.user가 CustomUser 모델을 참조하고 있으므로 username을 출력
+        return obj.user.username  # 사용자의 username을 표시
 
-    user.admin_order_field = 'user'  # admin에서 정렬 가능하게 하려면 필드명 지정
-    user.short_description = 'User'  # admin에서 보일 필드 이름을 설정
+    user.admin_order_field = 'user'
+    user.short_description = 'User'
+
+    def add_task(self, obj):
+        return obj.add_task  # add_task 필드 값을 반환
+
+    add_task.admin_order_field = 'add_task'  # 정렬 필드를 지정
+    add_task.short_description = 'Add Task'  # Admin에서 필드명 지정
