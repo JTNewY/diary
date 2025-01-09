@@ -18,23 +18,16 @@
     }
 }
 
-/* 전체 페이지 배경 이미지 설정 */
-body {
-    background-image: url('1.jpg'); /* 배경 이미지 경로 */
-    background-size: cover; /* 화면 전체를 덮도록 설정 */
-    background-repeat: no-repeat; /* 반복 금지 */
-    background-position: center; /* 중앙 정렬 */
-    margin: 0; /* 기본 여백 제거 */
-    height: 100vh; /* 화면 전체 높이 */
-    overflow: hidden; /* 스크롤 방지 (선택 사항) */
-}
-
 
 /* 메인 컨테이너 설정 */
 main {
     display: flex; /* 플렉스 박스 사용 */
     justify-content: center; /* 수평 중앙 정렬 */
     align-items: center; /* 수직 중앙 정렬 */
+    background-image: url('1.jpg'); /* 배경 이미지 */
+    background-size: cover; /* 전체를 덮도록 설정 */
+    background-repeat: no-repeat; /* 이미지 반복 금지 */
+    background-position: center; /* 중앙 정렬 */
     padding: 0; /* 여백 제거 */
     height: calc(100vh); /* 헤더와 푸터 제외 전체 높이 */
     box-sizing: border-box;
