@@ -89,12 +89,24 @@ def calendar_view(request, username=None, selected_date=None):
 
 # 메인 페이지 뷰
 def main_page(request):
-    return render(request, 'main/main.html')  # 'base.html'로 변경 가능
+    holidays = Holiday.objects.all()
+    selected_date = request.GET.get('date', None)  # 날짜 선택을 위한 처리 (옵션)
+    context = {
+        'holidays': holidays,
+        'selected_date': selected_date,
+    }
+    return render(request, 'main/main.html', context)
 
-# 공휴일 목록
 def holiday_list(request):
-    holidays = Holiday.objects.all()  # 모든 공휴일 불러오기
-    return render(request, 'holidays.html', {'holidays': holidays})
+    holidays = Holiday.objects.all()
+    selected_date = request.GET.get('date', None)  # 날짜 선택을 위한 처리 (옵션)
+    context = {
+        'holidays': holidays,
+        'selected_date': selected_date,
+    }
+    return render(request, 'main/main.html', context)
+
+
 def calendar_events(request, username, start_date, end_date):
     # start_date와 end_date를 날짜 형식으로 변환 (시간까지 포함한 정확한 범위)
     start_date = datetime.strptime(start_date, '%Y-%m-%d')  # 예: '2024-12-01'
