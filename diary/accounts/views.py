@@ -2,8 +2,8 @@ from django.http import HttpResponse
 from django.shortcuts import render, redirect
 from django.contrib.auth import authenticate, login, logout
 from django.contrib import messages
-from .forms import CustomLoginForm
-
+from .forms import CustomLoginForm, FindUsernameForm
+from django.contrib.auth.models import User
 
 
 # 로그인 뷰
@@ -56,11 +56,27 @@ def accounts_signup(request):
 
 # 아이디 찾기 뷰
 def accounts_find_id(request):
-    return render(request, 'login/find_id.html')
+    form = FindUsernameForm()
+    
+    if request.method == 'POST':
+        form = FindUsernameForm(request.POST)
+        if form.is_valid():
+            first_name = form.cleaned_data['first_name']
+            email = form.cleaned_data['email']
+            user = User.objects.filter(first_name=first_name, email=email).first()  
+            if user:
+                messages.success(request, f'아이디는 {user.username}입니다.')
+                return redirect('auth:login')
+            else:
+                messages.error(request, '아이디 찾기에 실패했습니다.')
+        else:
+            messages.error(request, '입력한 값이 올바르지 않습니다.')
 
-# 비밀번호 찾기 뷰
+    return render(request, 'accounts/find_id.html', {'form': form, 'message_class': 'col-4 mx-auto'})
+
+# 비밀번호 초기화 뷰
 def accounts_find_pw(request):
-    return render(request, 'login/find_pw.html')
+    return render(request, 'accounts/find_pw.html')
 
 # 로그아웃
 def accounts_logout(request):
