@@ -97,14 +97,9 @@ def main_page(request):
     }
     return render(request, 'main/main.html', context)
 
-def holiday_list(request):
-    holidays = Holiday.objects.all()
-    selected_date = request.GET.get('date', None)  # 날짜 선택을 위한 처리 (옵션)
-    context = {
-        'holidays': holidays,
-        'selected_date': selected_date,
-    }
-    return render(request, 'main/main.html', context)
+def japan_holidays_view(request):
+    holidays = Holiday.objects.filter(H_country='JP').order_by('H_date')
+    return render(request, 'your_template.html', {'holidays': holidays})
 
 
 def calendar_events(request, username, start_date, end_date):

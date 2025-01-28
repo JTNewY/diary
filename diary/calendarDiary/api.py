@@ -1,21 +1,13 @@
-from django import forms
 import requests
 from .models import Holiday
 
-class HolidayForm(forms.ModelForm):
-    class Meta:
-        model = Holiday
-        fields = ['H_name', 'H_date', 'H_memo', 'H_country']
-        
 def fetch_japan_holidays():
-    # Public Holidays API URL
-    url = "https://date.nager.at/api/v3/PublicHolidays/2025/JP"  # 2025년 일본 공휴일
+    url = "https://date.nager.at/api/v3/PublicHolidays/2025/JP"
     response = requests.get(url)
 
     if response.status_code == 200:
         holidays = response.json()
         for holiday in holidays:
-            # API에서 받은 데이터 구조에 맞게 처리
             Holiday.objects.update_or_create(
                 H_name=holiday["localName"],
                 H_date=holiday["date"],
@@ -23,4 +15,4 @@ def fetch_japan_holidays():
             )
         print("일본 공휴일 데이터가 업데이트되었습니다.")
     else:
-        print("API 요청에 실패했습니다:", response.status_code)
+        print("API 요청 실패:", response.status_code)
