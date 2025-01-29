@@ -1,0 +1,121 @@
+/* 반응형 웹(모바일) */
+@media (max-width: 768px) {
+    main {
+        flex-direction: column; /* 플렉스 방향을 세로로 변경 */
+        align-items: stretch; /* 요소를 부모 컨테이너에 맞춤 */
+    }
+
+    .site-description,
+    .login-form,
+    .hidden-content {
+        max-width: 100%; /* 요소가 가로로 화면을 꽉 채우도록 설정 */
+        padding: 10px; /* 여백 추가 */
+        margin-bottom: 20px; /* 요소 간 간격 */
+    }
+
+    .hidden-content {
+        display: block; /* 기본적으로 보이도록 설정 */
+    }
+}
+
+
+/* 메인 컨테이너 설정 */
+main {
+    display: flex; /* 플렉스 박스 사용 */
+    justify-content: center; /* 수평 중앙 정렬 */
+    align-items: center; /* 수직 중앙 정렬 */
+    background-image: url('1.jpg'); /* 배경 이미지 */
+    background-size: cover; /* 전체를 덮도록 설정 */
+    background-repeat: no-repeat; /* 이미지 반복 금지 */
+    background-position: center; /* 중앙 정렬 */
+    padding: 0; /* 여백 제거 */
+    height: calc(100vh); /* 헤더와 푸터 제외 전체 높이 */
+    box-sizing: border-box;
+}
+
+/* 좌측 설명 영역 */
+.site-description {
+    margin-top: 50px; /* 위쪽 여백 추가 */
+    flex: 1; /* 나머지 공간을 사용 */
+    color: #fff; /* 텍스트 색상 */
+    font-size: 1.2rem; /* 글자 크기 */
+    line-height: 1.6; /* 줄 간격 */
+    padding-right: 40px; /* 오른쪽 여백 */
+    max-width: 60%; /* 최대 너비 제한 */
+}
+
+/* 우측 로그인 폼 */
+.login-page-container {
+    display: flex; /* 내부 정렬을 위한 플렉스 박스 */
+    flex-direction: column; /* 수직 정렬 */
+    justify-content: space-between; /* 위, 아래 공간 사용 */
+    background: rgba(255, 255, 255, 0.9); /* 흰색 반투명 배경 */
+    padding: 20px; /* 내부 여백 */
+    border-radius: 8px; /* 모서리를 둥글게 */
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1); /* 그림자 효과 */
+}
+
+/* 로그인 폼 내부 간격 */
+.login-container {
+    display: flex;
+    flex-direction: column; /* 수직 정렬 */
+    gap: 15px; /* 요소 간 간격 */
+}
+
+.login-container p {
+    margin: 0;
+    font-weight: bold;
+}
+
+/* 버튼 스타일 */
+button.login-btn {
+    background-color: #007BFF; /* 버튼 색상 */
+    color: white;
+    padding: 10px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+button.login-btn:hover {
+    background-color: #0056b3; /* 호버 색상 */
+}
+
+header {
+    position: fixed; /* 화면에 고정 */
+    top: 0; /* 상단에 배치 */
+    left: 0; /* 좌측에 배치 */
+    width: 100%; /* 화면 전체 너비 */
+    z-index: 1000; /* 다른 요소 위에 표시되도록 우선순위 설정 */
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* 아래 그림자 효과 */
+    padding: 10px 20px; /* 여백 */
+    border-bottom: 1px solid #ddd; /* 아래 테두리 (선택사항) */
+}
+
+
+#menu {
+    display: flex; /* 버튼을 가로로 배치 */
+    justify-content: center; /* 가운데 정렬 */
+    gap: 10px; /* 버튼 간격 */
+    list-style: none; /* 불릿 제거 */
+    padding: 0;
+    margin: 0;
+}
+
+#menu li {
+    cursor: pointer;
+    font-weight: bold;
+    color: #000000; /* 링크 색상 */
+}
+
+.hidden-content {
+    display: none; /* 초기 상태에서 숨김 */
+}
+
+.hidden-content.active {
+    display: block; /* active 클래스가 추가되면 보이도록 설정 */
+}
+
+.login-form.hidden {
+    display: none; /* 로그인 폼 숨김 */
+}
