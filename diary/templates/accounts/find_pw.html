@@ -3,12 +3,12 @@
 {% block content %}
 <div class="row justify-content-center align-items-center vh-100 bg-light">
     <div class="col-lg-5 col-md-8 col-sm-10 p-4 shadow rounded bg-white">
-        <h1 class="text-center mb-4 text-primary fw-bold">아이디 찾기</h1>
+        <h1 class="text-center mb-4 text-primary fw-bold">비밀번호 찾기</h1>
         <p class="text-center text-muted mb-4">
-            계정 정보를 입력하면 아이디를 확인할 수 있습니다.
+            계정 정보를 입력하면 비밀번호를 확인할 수 있습니다.
         </p>
-        <!-- 아이디 찾기 -->
-        <form id="findUsernameForm" method="POST">
+        <!-- 비밀번호 찾기 -->
+        <form id="findPasswordForm" method="POST">
             {% csrf_token %}
             <div class="card mb-4">
                 <div class="card-header bg-primary text-white">
@@ -20,28 +20,28 @@
                         <input type="text" id="first_name" name="first_name" class="form-control" placeholder="이름을 입력하세요." value="{{ form.first_name.value|default_if_none:'' }}">
                         {% if form.first_name.errors %}
                         <div class="form-text text-danger">
-                            {{ form.first_name.errors.0 }}
+                            {{ form.first_name.errors.0 }}  <!-- 여기가 오류 메시지가 제대로 출력되도록 수정 -->
                         </div>
                         {% endif %}
-                    </div>
+                    </div>                 
                     <div class="mb-3">
-                        <label for="email" class="form-label">이메일 <span class="text-danger">*</span></label>
-                        <input type="email" id="email" name="email" class="form-control" placeholder="이메일을 입력하세요." value="{{ form.email.value|default_if_none:'' }}">
-                        {% if form.email.errors %}
+                        <label for="username" class="form-label">아이디 <span class="text-danger">*</span></label>
+                        <input type="text" id="username" name="username" class="form-control" placeholder="아이디를 입력하세요." value="{{ form.username.value|default_if_none:'' }}">
+                        {% if form.username.errors %}
                         <div class="form-text text-danger">
-                            {{ form.email.errors.0 }}
+                            {{ form.username.errors.0 }}  <!-- 여기도 오류 메시지가 잘 나오도록 확인 -->
                         </div>
                         {% endif %}
                     </div>
                 </div>
             </div>
             <div class="d-grid gap-2">
-                <button type="submit" class="btn btn-primary btn-lg">아이디 찾기</button>
-                <a href="{% url 'accounts:find_pw' %}" class="btn btn-outline-danger btn-lg">비밀번호 찾기</a>
+                <button type="submit" class="btn btn-primary btn-lg">비밀번호 찾기</button>
+                <a href="{% url 'accounts:reset_pw' %}" class="btn btn-outline-danger btn-lg">비밀번호 초기화</a>
                 <a href="{% url 'accounts:login' %}" class="btn btn-outline-secondary btn-lg">취소</a>
             </div>
         </form>
-        <!--// 아이디 찾기 -->
+        <!--// 비밀번호 찾기 -->
     </div>
 </div>
 {% endblock %}
@@ -49,13 +49,13 @@
 {% block script %}
 <script>
     $(document).ready(function () {
-        // 아이디 찾기 폼 검증
-        $('#findUsernameForm').validate({
+        // 비밀번호 찾기 폼 검증
+        $('#findPasswordForm').validate({ 
             rules: {
                 first_name: {
                     required: true,
                 },
-                email: {
+                username: {
                     required: true,
                 }
             },
@@ -63,8 +63,8 @@
                 first_name: {
                     required: '이름을 입력하세요.',
                 },
-                email: {
-                    required: '이메일을 입력하세요.',
+                username: {
+                    required: '아이디를 입력하세요.',
                 }
             },
             errorClass: 'is-invalid',
